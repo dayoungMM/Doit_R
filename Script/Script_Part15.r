@@ -49,13 +49,45 @@ exam[exam$math >= 50, c("english", "science")]
 
 ## -------------------------------------------------------------------- ##
 exam$tot <- (exam$math + exam$english + exam$science)/3
+#formula : y~ Xs :y는 결과(종속변수), X는 원인(들)(설명변수)
+#클래스멸 tot의 평균을 구하라 
 aggregate(data=exam[exam$math >= 50 & exam$english >= 80,], tot~class, mean)
+
+install.packages('dplyr')  #download
+library(dplyr) #import
+
 
 exam %>%
   filter(math >= 50 & english >= 80) %>%
   mutate(tot = (math + english + science)/3) %>%
   group_by(class) %>%
   summarise(mean = mean(tot))
+
+#### 혼자서 해보기 ####
+## compact와 suv차종의 도시 및 고속도로 통합 연비 평균 구하기
+install.packages('ggplot2')
+library(ggplot2)
+mpg <-as.data.frame(ggplot2::mpg)
+mpg
+mpg %>%
+  mutate(tot = (cty + hwy)/2) %>%  #통합 연비 변수 생성
+  filter(class == "compact"|class == "suv") %>%  #class가 compact와 suv인것 추출
+  group_by(class) %>% #클래스별 분리
+  summarise(mean_tot = mean(tot)) #tot 평균 산출하여 변수 생성
+
+## quiz 2 p331
+class(mpg$drv) #mpg dataframe의 drv컬럼
+mpg$drv
+#ordered = T로 지정하면 순서가 있는 factor가 됩니다.
+#이 때 levels로 순서를 지정할 수 있다
+facdrv <- factor(mpg$drv, ordered = T, level= c('f','r','4'))
+class(facdrv)
+levels(facdrv)
+facdrv
+
+mpg
+
+
 
 
 #### 15-2 ####
@@ -95,7 +127,8 @@ mean(var2)                # 함수 재적용
 class(var2)               # 타입 확인
 levels(var2)              # 범주 확인
 
-
+#na :결측값
+#null : 내용은 입력이 되었는데 내용이 없다고(null) 입력된것
 #### 15-3 ####
 
 ## -------------------------------------------------------------------- ##
@@ -134,6 +167,13 @@ x3
 
 # 데이터 구조 확인
 class(x3)
+
+
+#vector 만들기
+seq(10,1,-3)
+10:1
+cbind(c(1,3,5,7,9,c(1,3)*100))
+rep(c(1,3,5), times=2, each=3, length.out=10)
 
 
 # 리스트 생성 - 앞에서 생성한 데이터 구조 활용
