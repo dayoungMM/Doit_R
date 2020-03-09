@@ -199,3 +199,6 @@ manuf_mod = paste(mpg$manufacturer, mpg$model ,sep =" | ") #두개씩 결합합
 manuf_mod
 qplot(manuf_mod, data=mpg, geom="bar")+coord_flip()
 
+## quiz p77
+scores <- c(30,50,70,40,80)
+mean(scores)
