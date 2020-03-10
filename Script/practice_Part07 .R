@@ -65,7 +65,6 @@ outlier <- data.frame(sex = c(1, 2, 1, 3, 2, 1),
 outlier
 
 table(outlier$sex)
-
 table(outlier$score)
 
 # sex가 3이면 NA 할당
@@ -131,56 +130,3 @@ boxplot(mpg$hwy)$stats
 # 극단치 결측 처리
 mpg$hwy <- ifelse(mpg$hwy < 12 | mpg$hwy > 37, NA, mpg$hwy)
 
-### quiz p170
-
-mpg <- as.data.frame(ggplot2::mpg)
-mpg[c(65,124,131,153,212), "hwy"] <- NA
-
-table(is.na(mpg$hwy))
-
-mpg %>% filter(!is.na(hwy)) %>%
-  group_by(drv) %>%
-  summarise(mean= mean(hwy)) %>%
-  arrange(desc(mean))
-
-
-
-### Quiz 추가 ####
-# 결측치가 들어있는 mpg 데이터를 활용해서 문제를 해결해보세요.
-mpg <- as.data.frame(ggplot2::mpg)
-rowna <- c(1, 8, 27, 89, 101, 73, 189, 211)
-colna <- c(7, 9)
-nas <- cbind(rowna, colna)
-mpg[nas] <- NA
-
-# • Q1. drv(구동방식)별로 hwy(고속도로 연비) 평균이 어떻게 다른지 알아보자.
-## - 분석을 하기 전에 우선 두 변수에 결측치가 있는지 확인하자.
-## - drv 변수와 hwy 변수에 결측치가 몇 개 있는지 알아보세요.
-
-table(is.na(mpg$drv))
-table(is.na(mpg$hwy))
-
-
-# • Q2. filter()를 이용해 hwy 변수의 결측치를 제외하고,
-## - 어떤 구동방식의 hwy 평균이 높은지 알아보세요.
-## - 하나의 dplyr 구문으로 만들어야 합니다.
-
-replace<- mpg %>% filter(!is.na(drv) & !is.na(hwy)) %>%
-  group_by(drv) %>%
-  summarise(mean = mean(hwy)) %>%
-  arrange(desc(mean))
-
-replace
-# • Q3. drv 그룹별 hwy의 평균으로 결측치를 대체하고자 한다면?
-na_idx = which(is.na(mpg$hwy))
-na_idx
-
-
-mpg[na_idx,]$hwy <- left_join(mpg[na_idx,],replace,by="drv")$mean
-table(is.na(mpg$hwy))
-
-mpg$hwy[1:5]
-
-result<-left_join (mpg, replace, by="drv") %>%
-    mutate(muhwy = ifelse(is.na(hwy),mean, hwy))
-table(is.na(result$hwy))         
