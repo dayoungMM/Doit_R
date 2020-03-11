@@ -183,4 +183,36 @@ mpg$hwy[1:5]
 
 result<-left_join (mpg, replace, by="drv") %>%
     mutate(muhwy = ifelse(is.na(hwy),mean, hwy))
-table(is.na(result$hwy))         
+table(is.na(result$hwy))
+
+
+
+rm(list=ls())
+
+
+####quiz p178
+mpg <- as.data.frame(ggplot2::mpg)
+head(mpg)
+mpg[c(10,14,58,93), "drv"] <- "k"
+mpg[c(29,43,129,203), "cty"] <- c(3,4,39,42)
+
+#drv 이상치 확인
+table(mpg$drv)
+
+unique(mpg$drv)
+mpg$drv <- ifelse(mpg$drv %in% c("4","f","r"),mpg$drv, NA)
+table(mpg$drv)
+
+#상자그림을 이용해 cty에 이상치가 있는지 확인
+boxplot(mpg$cty)
+boxplot(mpg$cty)$stats
+
+mpg$cty <- ifelse(mpg$cty < 9 | mpg$cty >26, NA, mpg$cty )
+boxplot(mpg$cty)
+
+#drv, cty 평균 비교하기
+
+mpg %>% 
+  na.omit() %>%
+  group_by(drv) %>%
+  summarise(mean = mean(cty))
